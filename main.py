@@ -1,7 +1,7 @@
 import requests
 import datetime
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 request_string = "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR"
 response = requests.get(request_string)
@@ -38,4 +38,14 @@ def minute_price_historical(symbol, comparison_symbol, limit, aggregate, exchang
     df['timestamp'] = [datetime.datetime.fromtimestamp(d) for d in df.time]
     return df
 
-print(price('LTC'))
+def main():
+    print("HELLO")
+    df = daily_price_historical('BTC', 'USD')
+    print(df.head())
+
+    plt.plot(df.timestamp, df.close)
+    plt.xticks(rotation=45)
+    plt.show()
+
+if __name__ == "__main__":
+    main()

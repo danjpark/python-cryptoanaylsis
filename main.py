@@ -27,6 +27,17 @@ def daily_price_historical(symbol, comparison_symbol, limit=1, aggregate=1, exch
     df['timestamp'] = [datetime.datetime.fromtimestamp(d) for d in df.time]
     return df
 
+def hourly_price_historical(symbol, comparison_symbol, limit, aggregate, exchange=''):
+    url = 'https://min-api.cryptocompare.com/data/histohour?fsym={}&tsym={}&limit={}&aggregate={}'\
+            .format(symbol.upper(), comparison_symbol.upper(), limit, aggregate)
+    if exchange:
+        url += '&e={}'.format(exchange)
+    page = requests.get(url)
+    data = page.json()['Data']
+    df = pd.DataFrame(data)
+    df['timestamp'] = [datetime.datetime.fromtimestamp(d) for d in df.time]
+    return df
+
 def minute_price_historical(symbol, comparison_symbol, limit, aggregate, exchange=''):
     url = 'https://min-api.cryptocompare.com/data/histominute?fsym={}&tsym={}&limit={}&aggregate={}'\
             .format(symbol.upper(), comparison_symbol.upper(), limit, aggregate)
@@ -40,7 +51,7 @@ def minute_price_historical(symbol, comparison_symbol, limit, aggregate, exchang
 
 def main():
     print("HELLO")
-    df = daily_price_historical('BTC', 'USD')
+    df = hourly_price_historical('BTC', 'USD', 9999, 1)
     print(df.head())
 
     plt.plot(df.timestamp, df.close)
